@@ -127,6 +127,9 @@ def create_html_table(table_content):
     return html_content
 
 def create_table_rows(table_content):
+    # Sort the remaining rows by the first column and then by the second column
+    sorted_rows = sorted(table_content[2:], key=lambda x: (x[0], x[1]))
+
     rows = ""
 
     # Create the first row with merged cells
@@ -146,14 +149,15 @@ def create_table_rows(table_content):
         rows += f"<td>{cell_data}</td>"
     rows += "</tr>"
 
-    # Create the remaining rows
-    for row_data in table_content[2:]:
+    # Create the sorted remaining rows
+    for row_data in sorted_rows:
         rows += "<tr>"
         for cell_data in row_data:
             rows += f"<td>{cell_data}</td>"
         rows += "</tr>"
 
     return rows
+
 
 def start_server(table_url, port=8000):
     class RequestHandler(http.server.SimpleHTTPRequestHandler):
