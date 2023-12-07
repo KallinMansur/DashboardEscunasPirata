@@ -163,9 +163,20 @@ def create_table_rows(table_content):
     # Create the sorted remaining rows
     for row_data, last_row_data in zip(sorted_rows, last_table_content[2:]):
         rows += "<tr>"
-        for cell_data, last_value in zip(row_data, last_row_data):
+        for i, (cell_data, last_value) in enumerate(zip(row_data, last_row_data)):
             # Change cell color to green if the value has changed
             style = "color: green;" if cell_data != last_value else ""
+
+            # Apply background color to the eighth column based on its values
+            if i == 7:  # Eighth column
+                cell_value = int(cell_data) if cell_data.isdigit() else 0
+                if cell_value >= 150:
+                    style += "background-color: red;"
+                elif cell_value >= 135:
+                    style += "background-color: orange;"
+                elif cell_value >= 120:
+                    style += "background-color: yellow;"
+
             rows += f"<td style='{style}'>{cell_data}</td>"
         rows += "</tr>"
 
@@ -174,10 +185,6 @@ def create_table_rows(table_content):
     last_table_content = table_content[0:2][:]
     for row in sorted_rows:
         last_table_content.append(row)
-
-    print(last_table_content)
-
-
 
     return rows
 
