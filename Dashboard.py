@@ -7,6 +7,9 @@ from bs4 import BeautifulSoup
 import requests
 import time
 
+# Global variable to store the last table content
+last_table_content = None
+
 def get_table_content(url):
     response = requests.get(url)
 
@@ -127,6 +130,12 @@ def create_html_table(table_content):
     return html_content
 
 def create_table_rows(table_content):
+    global last_table_content  # Use the global variable
+
+    if last_table_content is None:
+        # If last_table_content is not initialized, set it to the current table content
+        last_table_content = table_content
+
     # Sort the remaining rows by the first column and then by the second column
     sorted_rows = sorted(table_content[2:], key=lambda x: (x[0], x[1]))
 
@@ -145,16 +154,30 @@ def create_table_rows(table_content):
     # Create the second row starting from the third cell
     rows += "<tr>"
     rows += "<td colspan='2'></td>"
-    for cell_data in table_content[1][:]:
-        rows += f"<td>{cell_data}</td>"
+    for cell_data, last_value in zip(table_content[1][:], last_table_content[1][:]):
+        # Change cell color to green if the value has changed
+        style = "color: green;" if cell_data != last_value else ""
+        rows += f"<td style='{style}'>{cell_data}</td>"
     rows += "</tr>"
 
     # Create the sorted remaining rows
-    for row_data in sorted_rows:
+    for row_data, last_row_data in zip(sorted_rows, last_table_content[2:]):
         rows += "<tr>"
-        for cell_data in row_data:
-            rows += f"<td>{cell_data}</td>"
+        for cell_data, last_value in zip(row_data, last_row_data):
+            # Change cell color to green if the value has changed
+            style = "color: green;" if cell_data != last_value else ""
+            rows += f"<td style='{style}'>{cell_data}</td>"
         rows += "</tr>"
+
+    last_table_content = None
+
+    last_table_content = table_content[0:2][:]
+    for row in sorted_rows:
+        last_table_content.append(row)
+
+    print(last_table_content)
+
+
 
     return rows
 
