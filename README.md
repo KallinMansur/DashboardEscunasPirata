@@ -16,6 +16,6 @@ pip install requests
 
 # Implementações futuras
 
-- Implementação de mapa de cores de acordo com a disponibilidade de ingressos (Amarelo 80%, Laranja 90%, Vermelho 100%)
+- Implementação de mapa de cores de acordo com a disponibilidade de ingressos (Amarelo 80%, Laranja 90%, Vermelho 100%) COM INTEGRAÇÃO DE API
 
 - Implementação de acompanhamento de check-in
